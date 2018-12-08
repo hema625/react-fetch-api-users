@@ -1,27 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 
 class App extends Component {
+constructor(props)  {
+   super(props);
+   this.state = {
+     items : [],
+     isLaunched : false
+   }
+}
+
+componentDidMount() {
+  fetch('https://jsonplaceholder.typicode.com/users')
+  .then(res => res.json())
+  .then(json => {
+        this.setState({
+           items : json,
+           isLaunched : true
+        })
+  });
+}
+
   render() {
-    return (
+
+    let {items,isLaunched} = this.state;
+
+    if (!isLaunched) {
+      return("Data is loading")
+    }
+    else{
+        return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <ul>
+             {
+               items.map(num => {
+                 return <li key = {num.id}>Name : {num.name} | Email :{num.email}</li>
+               })
+             }
+      </ul>
       </div>
     );
+        }
   }
 }
 
